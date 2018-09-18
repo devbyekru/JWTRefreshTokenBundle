@@ -2,7 +2,7 @@
 
 namespace Gesdinet\JWTRefreshTokenBundle\DependencyInjection\Compiler;
 
-use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
+
 use Doctrine\Bundle\MongoDBBundle\DependencyInjection\Compiler\DoctrineMongoDBMappingsPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,31 +29,11 @@ final class DoctrineMappingsCompilerPass implements CompilerPassInterface
 
         $mappingPass = isset($config['manager_type']) && 'mongodb' === strtolower($config['manager_type'])
             ? $this->getODMCompilerPass($config)
-            : $this->getORMCompilerPass($config);
+            : $this->getODMCompilerPass($config);
 
         $mappingPass->process($container);
     }
 
-    /**
-     * @param array $config
-     *
-     * @return CompilerPassInterface
-     */
-    protected function getORMCompilerPass(array $config)
-    {
-        $nameSpace = 'Gesdinet\JWTRefreshTokenBundle\Entity';
-        $mappings = array(
-            realpath(dirname(__DIR__, 2).'/Resources/config/orm/doctrine-orm') => $nameSpace,
-        );
-
-        if (isset($config['refresh_token_class']) || isset($config['refresh_token_entity'])) {
-            $mappings[realpath(dirname(__DIR__, 2).'/Resources/config/orm/doctrine-superclass')] = $nameSpace;
-        } else {
-            $mappings[realpath(dirname(__DIR__, 2).'/Resources/config/orm/doctrine-entity')] = $nameSpace;
-        }
-
-        return DoctrineOrmMappingsPass::createYamlMappingDriver($mappings);
-    }
 
     /**
      * @param array $config
