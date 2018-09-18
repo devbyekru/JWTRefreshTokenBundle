@@ -33,8 +33,6 @@ final class DoctrineMappingsCompilerPass implements CompilerPassInterface
 
         $mappingPass->process($container);
     }
-
-
     /**
      * @param array $config
      *
